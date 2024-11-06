@@ -1,14 +1,15 @@
-#include <stdint.h>
+//#include <stdint.h>
 
 #include "uart.h"
+#include "timer.h"
 
-static volatile uint8_t *uart;
+static volatile int *uart;
 
 void uart_init() {
-    uart = (uint8_t *)(void *)NS16550A_UART0_CTRL_ADDR;
-    uint32_t uart_freq = UART0_CLOCK_FREQ;
-    uint32_t baud_rate = UART0_BAUD_RATE;
-    uint32_t divisor = uart_freq / (16 * baud_rate);
+    uart = (int *)(void *)NS16550A_UART0_CTRL_ADDR;
+    int uart_freq = UART0_CLOCK_FREQ;
+    int baud_rate = UART0_BAUD_RATE;
+    int divisor = uart_freq / (16 * baud_rate);
     uart[UART_LCR] = UART_LCR_DLAB;
     uart[UART_DLL] = divisor & 0xff;
     uart[UART_DLM] = (divisor >> 8) & 0xff;
@@ -17,7 +18,7 @@ void uart_init() {
 
 static int ns16550a_putchar(int ch) {
     while ((uart[UART_LSR] & UART_LSR_RI) == 0)
-        ;
+        wait_cycles(10);
     return uart[UART_THR] = ch & 0xff;
 }
 

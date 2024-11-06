@@ -1,6 +1,6 @@
 #include "main.h"
 #include "riscv.h"
-#include "stdint.h"
+//#include "stdint.h"
 #include "timer.h"
 
 // extern void timervec();
@@ -15,21 +15,17 @@ void start() {
 
     // set M Exception Program Counter to main, for mret.
     // requires gcc -mcmodel=medany
-    w_mepc((uint64_t)main);
+    w_mepc((long long)main);
 
     // disable paging for now.
     w_satp(0);
-
-    // physical memory protection
-    w_pmpcfg0(0xf);
-    w_pmpaddr0(0xffffffffffffffff);
 
     // delegate all interrupts and exceptions to supervisor mode.
     w_medeleg(0xffff);
     w_mideleg(0xffff);
 
     // setup trap_entry
-    w_mtvec((uint64_t)trap_entry);
+    w_mtvec((long long)trap_entry);
 
     // keep each CPU's hartid in its tp register, for cpuid().
     int id = r_mhartid();

@@ -1,12 +1,12 @@
 SHELL = /bin/sh
-ARCH = riscv64-linux-gnu
-CC = $(ARCH)-gcc
+ARCH = /local/scratch/jdw57/llvm-bin/bin/riscv64-unknown-freebsd
+CC = $(ARCH)-cc
 LD = $(ARCH)-ld
 OBJCOPY = $(ARCH)-objcopy
 IDIR = inc
 SDIR = src
 BDIR = build
-CFLAGS = -Wall -mcmodel=medany -g -I $(IDIR) -O0
+CFLAGS = -Wall -mcmodel=medany -g -I $(IDIR) -O2
 SFLAGS = -g -I $(IDIR)
 OBJCOPY = $(ARM)-objcopy
 S_SRCS = $(wildcard $(SDIR)/*.s)
